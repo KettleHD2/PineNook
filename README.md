@@ -1,6 +1,10 @@
-# Discord Activity: Getting Started Guide
+# PineNook 
 
-This template is used in the [Building An Activity](https://discord.com/developers/docs/activities/building-an-activity) tutorial in the Discord Developer Docs.
+PineNook is a full-stack web application and integrated Discord bot hosted on a Raspberry Pi and securely exposed to the web using a Cloudflare Tunnel.
 
-Read more about building Discord Activities with the Embedded App SDK at [https://discord.com/developers/docs/activities/overview](https://discord.com/developers/docs/activities/overview).
+Project Structure
 
+```
+PineNook/
+├── client/         # Frontend application (Vite / React / Static assets)
+└── server/         # Backend server and Discord bot logic
