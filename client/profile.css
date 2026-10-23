@@ -1,0 +1,43 @@
+/* ===== Study profile & pet ===== */
+#profile-modal {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(10, 15, 11, 0.95); display: flex; justify-content: center; align-items: center; z-index: 11;
+}
+.profile-panel { width: min(94%, 450px); }
+.pf-top { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; align-items: center; }
+#pf-pet { width: 200px; height: 170px; display: block; background: #223829; border: 3px solid #0b120d; box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.35); }
+.pf-id { flex: 1; min-width: 190px; display: flex; flex-direction: column; gap: 5px; }
+.pf-who { display: flex; align-items: center; gap: 8px; }
+.pf-names { min-width: 0; }
+.pf-names h3 { margin: 0; text-align: left; font-size: 0.95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pf-sub { font-size: 0.68rem; opacity: 0.75; }
+.pf-lvl { display: flex; justify-content: space-between; align-items: baseline; margin-top: 4px; }
+.pf-lvl strong { color: #a3d977; font-size: 1.05rem; }
+.pf-bar { height: 12px; background: #101712; border: 3px solid #0b120d; box-sizing: border-box; overflow: hidden; }
+.pf-bar.thin { height: 8px; border-width: 2px; }
+.pf-bar > div { height: 100%; width: 0; background: repeating-linear-gradient(90deg, #a3d977 0 6px, #86bb5b 6px 9px); transition: width 0.4s steps(8, end); }
+.pf-bar.thin > div { background: repeating-linear-gradient(90deg, #88c0d0 0 6px, #6aa3b4 6px 9px); }
+
+.pf-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0 8px; }
+.pf-stat { background: #101712; border: 3px solid #0b120d; padding: 5px 4px; text-align: center; min-width: 0; box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.35); }
+.pf-stat b { display: block; font-size: 0.9rem; color: #88c0d0; white-space: nowrap; }
+.pf-stat span { font-size: 0.62rem; opacity: 0.7; }
+
+.pf-week { display: flex; gap: 6px; align-items: flex-end; height: 74px; margin: 6px 0 10px; padding: 0 2px; }
+.wk { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; height: 100%; font-size: 0.62rem; opacity: 0.9; }
+.wk i { display: block; width: 100%; background: #a3d977; border: 2px solid #0b120d; box-sizing: border-box; min-height: 4px; }
+.wk i.empty { background: #22352a; }
+.wk.today span { color: #a3d977; font-weight: bold; }
+
+.pf-custom { border-top: 2px solid #22352a; padding-top: 6px; }
+.pf-name-input {
+  flex: 1; min-width: 0; background: #101712; border: 3px solid #0b120d; color: #fff; padding: 3px 6px;
+  font-family: inherit; font-size: 0.75rem; box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.45); outline: none;
+}
+.pf-name-input:focus { border-color: #a3d977; }
+
+/* roster: clickable rows + Today / Week / All time tabs */
+.seg { display: flex; gap: 4px; margin-bottom: 8px; }
+.seg .buddy-opt { flex: 1; padding: 3px 2px; font-size: 0.65rem; }
+.roster-row.clickable { cursor: pointer; }
+.roster-row.clickable:hover { background: rgba(163, 217, 119, 0.08); }

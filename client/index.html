@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlowSesh - Forest Nook</title>
+  </head>
+  <body>
+    <div id="app-wrapper">
+      <div id="app">
+        <header class="forest-header">
+          <div class="row">
+            <span id="channel-display">🌲 Study Sesh</span>
+            <div class="timer-controls">
+              <span id="phase-badge" data-icon="tomato"></span>
+              <span id="timer-display">25:00</span>
+              <button id="start-timer" class="ibtn small" data-icon="play" title="Start"></button>
+              <button id="reset-timer" class="ibtn small" data-icon="reset" title="Reset"></button>
+            </div>
+          </div>
+          <div class="row">
+            <input type="text" id="status-input" list="status-presets" maxlength="40" placeholder="Set status" value="🟢 Deep Focus" />
+            <datalist id="status-presets">
+              <option value="🟢 Deep Focus"></option>
+              <option value="📚 Reading"></option>
+              <option value="💻 Coding"></option>
+              <option value="✍️ Writing"></option>
+              <option value="🧠 Brainstorming"></option>
+              <option value="☕ On a break"></option>
+            </datalist>
+            <input type="text" id="goal-input" maxlength="60" placeholder="What are you working on?" />
+            <select id="preset-select" title="Focus / break minutes">
+              <option value="25,5">25/5</option>
+              <option value="50,10">50/10</option>
+              <option value="15,3">15/3</option>
+            </select>
+          </div>
+        </header>
+
+        <div class="viewport-container">
+          <canvas id="bg-canvas"></canvas>
+          <canvas id="forest-canvas" width="540" height="540"></canvas>
+          <div id="toast"></div>
+          <aside id="roster-panel" class="hidden">
+            <h4>Study board</h4>
+            <div id="roster-tabs" class="seg">
+              <button class="buddy-opt selected" data-mode="today">Today</button>
+              <button class="buddy-opt" data-mode="week">Week</button>
+              <button class="buddy-opt" data-mode="all">All time</button>
+            </div>
+            <div id="roster-list"></div>
+          </aside>
+
+          <div class="hud" id="hud-tl">
+            <button id="toggle-roster" class="ibtn" data-icon="people" title="Who's here"><span id="roster-count" class="badge">0</span></button>
+            <button id="toggle-profile" class="ibtn" data-icon="paw" title="My pet &amp; study stats"><span id="level-badge" class="badge">1</span></button>
+          </div>
+          <div class="hud" id="hud-tr">
+            <button id="toggle-cards" class="ibtn" data-icon="cards" title="Flashcards"></button>
+            <button id="toggle-wb" class="ibtn" data-icon="board" title="Whiteboard"></button>
+            <button id="toggle-sound" class="ibtn" data-icon="speaker" title="Soundboard"></button>
+          </div>
+          <div class="hud" id="hud-r">
+            <button class="ibtn react" data-emoji="👏" data-icon="heart" title="Cheer"></button>
+            <button class="ibtn react" data-emoji="🔥" data-icon="flame" title="On fire"></button>
+            <button class="ibtn react" data-emoji="☕" data-icon="mug" title="Coffee break"></button>
+            <button class="ibtn react" data-emoji="💪" data-icon="dumbbell" title="Keep going"></button>
+            <button class="ibtn react" data-emoji="🎉" data-icon="star" title="Celebrate"></button>
+          </div>
+          <button id="toggle-buddy" title="Change your buddy"><canvas id="buddy-preview" width="88" height="90"></canvas></button>
+        </div>
+
+        <div id="cards-modal" class="hidden">
+          <div class="panel">
+            <h3>My Flashcards <small id="card-count"></small></h3>
+            <div class="card-form">
+              <input id="card-q" maxlength="200" placeholder="Question" />
+              <input id="card-a" maxlength="80" placeholder="Answer" />
+              <button id="card-add">Add</button>
+            </div>
+            <div id="card-list"></div>
+            <details class="gen-box">
+              <summary>Generate cards with AI</summary>
+              <div class="gen-grid">
+                <input id="gen-course" maxlength="100" placeholder="Course / subject (e.g. Organic Chemistry 1)" />
+                <input id="gen-topic" maxlength="100" placeholder="Topic (optional, e.g. Krebs cycle)" />
+                <input id="gen-inst" maxlength="100" placeholder="Institution (optional)" />
+                <select id="gen-level">
+                  <option>High school</option>
+                  <option selected>Undergraduate</option>
+                  <option>Graduate</option>
+                  <option>Professional</option>
+                </select>
+                <select id="gen-count">
+                  <option value="8">8 cards</option>
+                  <option value="10" selected>10 cards</option>
+                  <option value="15">15 cards</option>
+                </select>
+                <textarea id="gen-notes" maxlength="6000" placeholder="Paste notes or a syllabus section for much better cards (optional)"></textarea>
+              </div>
+              <button id="gen-btn">Generate</button>
+              <div id="gen-results"></div>
+              <button id="gen-add" class="hidden">Add selected</button>
+              <p class="gen-note">Cards come from a free AI service, so double-check them. What you type here may be used by the provider to improve its models — don't paste personal info.</p>
+            </details>
+            <div id="study-card" class="study-card">Press “Study” to flip through your cards. Click a card to reveal the answer.</div>
+            <div class="wb-controls">
+              <button id="study-next">Study / Next</button>
+              <button id="close-cards">Close</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="profile-modal" class="hidden">
+          <div class="panel profile-panel">
+            <div class="pf-top">
+              <canvas id="pf-pet" width="200" height="170"></canvas>
+              <div class="pf-id">
+                <div class="pf-who">
+                  <div id="pf-avatar" class="roster-avatar"></div>
+                  <div class="pf-names"><h3 id="pf-name"></h3><div id="pf-sub" class="pf-sub"></div></div>
+                </div>
+                <div class="pf-lvl"><strong id="pf-level">Lv 1</strong><span id="pf-xp" class="pf-sub"></span></div>
+                <div class="pf-bar"><div id="pf-lvl-fill"></div></div>
+                <div id="pf-evolve" class="pf-sub"></div>
+                <div class="pf-bar thin"><div id="pf-stage-fill"></div></div>
+              </div>
+            </div>
+            <div class="pf-stats">
+              <div class="pf-stat"><b id="pf-total">0m</b><span>Total studied</span></div>
+              <div class="pf-stat"><b id="pf-today">0m</b><span>Today</span></div>
+              <div class="pf-stat"><b id="pf-weeksum">0m</b><span>Last 7 days</span></div>
+              <div class="pf-stat"><b id="pf-streak">0 days</b><span>Current streak</span></div>
+              <div class="pf-stat"><b id="pf-best">0 days</b><span>Best streak</span></div>
+              <div class="pf-stat"><b id="pf-sessions">0</b><span>Sessions done</span></div>
+            </div>
+            <div id="pf-week" class="pf-week"></div>
+            <div id="pf-custom" class="pf-custom"></div>
+            <div class="wb-controls"><button id="pf-close">Close</button></div>
+          </div>
+        </div>
+
+        <div id="battle-modal" class="hidden">
+          <div class="panel">
+            <h3 id="b-names"></h3>
+            <div id="b-scores" class="b-scores"></div>
+            <div id="b-status" class="b-status"></div>
+            <div id="b-timer" class="b-timer"><div id="b-timer-fill"></div></div>
+            <div id="b-question" class="b-question"></div>
+            <div id="b-options">
+              <button class="opt"></button><button class="opt"></button>
+              <button class="opt"></button><button class="opt"></button>
+            </div>
+            <div id="b-note" class="b-note"></div>
+            <div class="wb-controls">
+              <button id="b-accept">Accept</button>
+              <button id="b-decline">Decline</button>
+              <button id="b-forfeit">Forfeit</button>
+              <button id="b-close">Close</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="sound-modal" class="hidden">
+          <div id="sound-panel" class="panel sound-panel"></div>
+        </div>
+
+        <div id="whiteboard-modal" class="hidden">
+          <div class="whiteboard-content">
+            <h3>Campfire Whiteboard</h3>
+            <canvas id="draw-canvas" width="500" height="300"></canvas>
+            <div class="wb-colors">
+              <button class="wb-color" data-color="#263b2a" style="background:#263b2a"></button>
+              <button class="wb-color" data-color="#c0392b" style="background:#c0392b"></button>
+              <button class="wb-color" data-color="#2980b9" style="background:#2980b9"></button>
+              <button class="wb-color" data-color="#e1a100" style="background:#e1a100"></button>
+              <button class="wb-color eraser" data-color="#ffffff" data-width="18">Erase</button>
+            </div>
+            <div class="wb-controls">
+              <button id="clear-wb">Clear</button>
+              <button id="close-wb">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
